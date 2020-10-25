@@ -103,7 +103,7 @@ Scene.root.findFirst("pirate")
 
 
 async function getTileUI(name) {
-    const level = await Scene.root.findFirst("level_" + current_level)
+    const level = await Scene.root.findFirst("level" + current_level)
     return level.findFirst(name)
 }
 
