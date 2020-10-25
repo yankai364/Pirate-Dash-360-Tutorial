@@ -4,7 +4,7 @@ export const Diagnostics = require('Diagnostics');
 const Animation = require('Animation');
 const TouchGestures = require("TouchGestures");
 const Time = require("Time");
-
+const Patches = require('Patches');
 
 // Tile dimensions
 const unit_length = 0.15; // x length and z length
@@ -26,6 +26,7 @@ let tiles_position = {}
 let position_visited = {}
 
 // Gameflow variables
+let player_direction = "down"
 let tile_is_animating = false
 let selection = null; // store any selected tile (for swapping)
 let selection_position = null
@@ -86,6 +87,9 @@ Scene.root.findFirst("pirate")
         agent.transform.x = point[0];
         agent.transform.y = top_left_y + 0.11; // To ensure the pirate is at the right height
         agent.transform.z = point[1];
+
+        // Set agent animation clip to idle
+        Patches.inputs.setScalar('pirate_animation', 0)
 
         // Listen for tap on character
         TouchGestures.onTap(agent).subscribe(function (gesture) {
@@ -166,14 +170,28 @@ function moveAgent(agent, agentPosition) {
     } else if (direction == "down") {
         destinationPosition = [agentPosition[0], agentPosition[1] + 1];
     }
+
+    animateMoveAgent(agent, destinationPosition, direction);
  
     if (destinationPosition == null || position_tiles[destinationPosition] == null) {
         Diagnostics.log("Invalid move");
         player_lost = true;
+
+        Time.setTimeout(() => {
+            // Position to move toward is invalid - change to crash animation clip
+            Patches.inputs.setScalar('pirate_animation', 2);
+        }, 500);
+
         return agentPosition;
     } else if (position_visited[destinationPosition]) {
         Diagnostics.log("Moved backwards");
         player_lost = true;
+
+        // Dead - Change to crash animation clip
+        Time.setTimeout(() => {
+            Patches.inputs.setScalar('pirate_animation', 2);
+        }, 500)
+
         return agentPosition;
     }
  
@@ -235,3 +253,50 @@ const shiftx = (td, obj, destination) =>
 
 const shiftz = (td, obj, destination) =>
     Animation.animate(td, Animation.samplers.linear(obj.transform.z.pinLastValue(), destination));
+
+function animateMoveAgent(agent, destinationPosition, direction) {
+
+    Patches.inputs.setScalar('pirate_animation', 1);
+
+    // Rotate agent to face direction
+    if (direction !== player_direction) {
+        animateRotateAgent(agent, direction)
+        player_direction = direction
+    }
+
+    // Animate agent towards direction
+    const tdAgentMove = getTimeDriver(500);
+    const point = getMidPointFromIndex(destinationPosition);
+
+    agent.transform.x = shiftx(tdAgentMove, agent, point[0]);
+    agent.transform.z = shiftz(tdAgentMove, agent, point[1]);
+    tdAgentMove.start();
+    Time.setTimeout(() => {
+        // Set back to idle after each step
+        if (!player_lost) {
+            Patches.inputs.setScalar('pirate_animation', 0)
+        }
+    }, 500)
+
+}
+
+function animateRotateAgent(agent, direction) {
+    const tdRotateAgent = getTimeDriver()
+    let angles = {
+        "up": degreesToRadians(180),
+        "down": degreesToRadians(0),
+        "right": degreesToRadians(90),
+        "left": degreesToRadians(270)
+    }
+ 
+    agent.transform.rotationY = Animation.animate(
+        tdRotateAgent,
+        Animation.samplers.linear(angles[player_direction], angles[direction])
+    )
+    tdRotateAgent.start()
+}
+
+function degreesToRadians(degrees) {
+    let pi = Math.PI;
+    return degrees * (pi / 180);
+}
