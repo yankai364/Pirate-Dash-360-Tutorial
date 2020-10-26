@@ -830,7 +830,8 @@ let tile_is_animating = false;
 let ready = false;
 ```
 
-Finally, we can add the tap event subscriber to call the moveAgent function:
+Finally, we can add the **tap event subscriber** to call the `moveAgent` function:
+
 ```js
 // Place character on start tile
 Scene.root.findFirst("pirate")
