@@ -877,7 +877,9 @@ After animating the pirate, we will then make the pirate rotate towards the dire
 
 ### 5.1. Adding Animations
 
-We will add three types of animation for the pirate.
+We will add three types of animation for the pirate - idle, walk and crash.
+
+<p align="left"><img src="img/idle.gif" width="12%"/><img src="img/walk.gif" width="12%"/><img src="img/crash.gif" width="12%"/></p>
 
 <details><summary>Show Instructions</summary>
 
@@ -1090,16 +1092,16 @@ Congratulations! You have picked up the necessary skills and concepts to develop
 
 > Note: At any time that you are stuck on these challenges, you can refer to our [**Pirate Dash 360**](https://github.com/yankai364/Pirate-Dash-360) repository.
 
-### a. Challenge 1: Creating Multiple Levels
+### 6.1. Challenge 1: Creating Multiple Levels
 To introduce a 360 degree experience in the game, one could opt to create multiple levels, surrounding the player in question. An illustration can be seen below:
 
 <p align="center"><img src="img/360.gif" width="30%" hspace="50"/><img src="img/levels.png" width="30%" hspace="50"/></p>
 
-In order to facilitate multiple levels, you can use a JSON file to pre-customize the setups of the different levels.
+In order to facilitate multiple levels, you can use a JSON file to pre-customize the setups of the different levels. Refer to section **4.1. Positioning Tiles using Grid System** to plan and decide where each level will be located on the grid.
 
 Additionally, you can add instructions and directional signs to navigate the player from one level to another.
 
-### b. Challenge 2: Adding Multiple Worlds
+### 6.2. Challenge 2: Adding Multiple Worlds
 
 For **Pirate Dash 360**, we implemented three different themes - Grass World, Snow World, Desert World - to vary the level of difficulty of the game.
 
