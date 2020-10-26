@@ -1,6 +1,6 @@
 # **Learn Augmented Reality with Spark AR & Pirate Dash 360**
 
-## Create an Augmented Reality Puzzle Using Spark AR World Effect, through Pirate Dash 360!
+### Create our award-winning Augmented Reality (AR) puzzle game, Pirate Dash 360 with Spark AR!
 
 <div>
     <p align="center"><img src="img/PirateDash360_Tutorial_thumbnail.png" width="60%"/></p>
@@ -48,10 +48,17 @@ Basic JavaScript knowledge is recommended for this tutorial as it is required fo
 
 To get started, download this repository by selecting **Download ZIP** and save it to a familiar location. Open the **starter** folder.
 
-### **2.4. Understanding Starter Project**
-[TODO: include file structure pic and explanation]
-
-With a good understanding of the pre-starter project, we can now begin!
+### **2.4. Directory Structure**
+```js
+root
+  ├ starter
+  | ├ objects
+  | └ starter.arproj
+  ├ solution_part_1
+  ├ solution_part_2
+  └ solution_part_3
+```
+Within the starter folder (which you will work on), the objects folder contains all of the game assets that we will require for this tutorial. The .arproj file simply contains an empty Plane Tracker project. There are also 3 solution part folders, which act as checkpoints for your progress and will be mentioned throughout the tutorial. With a good understanding of the project structure, we can now begin!
 
 ## 3. **Importing and Customizing Game Assets**
 We will proceed to import and customize the game assets in the Spark AR environment. To simplify this process, please refer to the `/starter/objects` folder for all the relevant game assets that you would require for this section. 
