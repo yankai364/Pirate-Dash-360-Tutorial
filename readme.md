@@ -58,7 +58,7 @@ root
   ├ solution_part_2
   └ solution_part_3
 ```
-Within the starter folder (which you will work on), the objects folder contains all of the game assets that we will require for this tutorial. The .arproj file simply contains an empty Plane Tracker project. There are also 3 solution part folders, which act as checkpoints for your progress and will be mentioned throughout the tutorial. With a good understanding of the project structure, we can now begin!
+Within the **starter** folder (which you will work on), the **objects** folder contains all of the game assets that we will require for this tutorial. The **starter.arproj** file simply contains an empty Plane Tracker project. There are also 3 solution part folders, which act as checkpoints for your progress and will be mentioned throughout the tutorial. With a good understanding of the project structure, we can now begin!
 
 ## 3. **Importing and Customizing Game Assets**
 We will proceed to import and customize the game assets in the Spark AR environment. To simplify this process, please refer to the `/starter/objects` folder for all the relevant game assets that you would require for this section. 
@@ -214,7 +214,7 @@ You should be able to see the following:
 </details>
 
 ### **3.6. Checkpoint (1/3)**
-For a working example up to this point, refer to the solution_part_1 folder. If you are facing any issues, ensure that you resolve them by checking your project with our solution before moving on.
+For a working example up to this point, refer to the **solution_part_1** folder. If you are facing any issues, ensure that you resolve them by checking your project with our solution before moving on.
 
 
 ## 4. Creating the Augmented Environment
@@ -872,7 +872,7 @@ Animation! The pirate does not move as we have yet to set up any animation. In t
 </details>
 
 ### 4.9. Checkpoint (2/3)
-For a working example up to this point, refer to the solution_part_2 folder. If you are facing any issues, ensure that you resolve them by checking your project with our solution before moving on.
+For a working example up to this point, refer to the **solution_part_2** folder. If you are facing any issues, ensure that you resolve them by checking your project with our solution before moving on.
 
 ## 5. Giving Life to the Pirate
 
@@ -1088,10 +1088,14 @@ function degreesToRadians(degrees) {
 
 ### 5.3. Starting the Game
 
-And that's it! Try starting the game and the pirate will both be transitioning between animations and rotating when moving from one tile to another!
+And that's it! Restart the filter, play through the game and the pirate should be transitioning between animations and rotating when moving from one tile to another!
+
+<p align="left"><img src="img/complete.gif" width="30%" hspace="20"/><img src="img/fail.gif" width="30%" hspace="20"/></p>
+
+There are is no victory animation at the moment, so feel free to add your own custom effects or animation! You may do so by checking if the **player_won** boolean is **true** in the **moveAgent** function.
 
 ### 5.4. Checkpoint (3/3)
-For a working example up to this point, refer to the solution_part_3 folder. If you are facing any issues, ensure that you resolve them by checking your project with our solution before moving on.
+For a working example up to this point, refer to the **solution_part_3** folder. If you are facing any issues, ensure that you resolve them by checking your project with our solution before moving on.
 
 ## 6. Scaling It Up
 
