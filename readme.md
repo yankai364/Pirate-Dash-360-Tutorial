@@ -1090,7 +1090,7 @@ function degreesToRadians(degrees) {
 
 And that's it! Restart the filter, play through the game and the pirate should be transitioning between animations and rotating when moving from one tile to another!
 
-<p align="left"><img src="img/complete.gif" width="30%" hspace="20"/><img src="img/fail.gif" width="30%" hspace="20"/></p>
+<p align="left"><img src="img/complete.gif" width="30%"/><img src="img/fail.gif" width="30%" hspace="30"/></p>
 
 There are is no victory animation at the moment, so feel free to add your own custom effects or animation! You may do so by checking if the **player_won** boolean is **true** in the **moveAgent** function.
 
