@@ -11,7 +11,7 @@
 </div>
 
 ## **Table of Contents**
----
+
 TODO: Should we do this?
 
 TODO: Wanna add badges?
@@ -19,7 +19,7 @@ TODO: Wanna add badges?
 TODO: Wanna add emojis?
 
 ## 1. **Introduction**
----
+
 Always wanted to create an immersive Instagram game effect, but not sure how to? We will show you the way! This tutorial will guide you on how to create an Augmented Reality (AR) puzzle game using the Spark AR Studio - no experience required.
 
 It can be daunting to learn a new technology or software, especially for cutting edge technology such as AR. Fret not, we all start somewhere! For us, our journey and foray into this space only commenced during the competition period of the Facebook AR Hackathon, and if we can do it, so can you! 
@@ -35,13 +35,12 @@ We will be re-creating a puzzle game that we did for the Facebook AR Hackathon, 
 ### **1.2. Key Concepts Covered**
 
 Through this tutorial, you will learn how to:
-- Utilise various features of Spark AR Studio
+- Utilize various features of Spark AR Studio
 - Import and customize game assets using Spark AR Studio
 - Augment game environment using Spark AR Studio and JavaScript
 - Add animations using Spark AR Studio and JavaScript
 
 ## 2. **Before We Start**
----
 
 ### **2.1. Knowledge Prerequisites**
 - Javascript: https://javascript.info, https://www.json.org/json-en.html
@@ -217,41 +216,65 @@ You should be able to see the following:
 </details>
 
 ## 4. Part 2: Creating the Augmented Environment
----
+
 ### a. Positioning Tiles using Grid System
+
 ### b. Level Design
+
 ### c. Mapping Spark AR objects to JavaScript objects
+
 ### d. Rendering the Level
+
 ### e. Selecting Tiles
+
 ### f. Swapping Tiles
+
 ### g. Shifting the Pirate from One Tile to Another
+
 ### h. Starting the Game
 
+
 ## 5. Part 3: Giving Life to the Pirate
----
 
-Let’s bring the pirate to life! To do so, an animation playback controller is needed for each animation. The patch editor will then be used to link the animations as options for the option picker to control the pirate’s animation from the script. 
+Let’s bring the pirate to life! To do so, an animation playback controller is needed for each animation. The patch editor will link the animations to the options on the option picker s as to control the pirate’s animation from the script. 
 
-After animating the pirate, we will then make the pirate rotate towards the direction corresponding to the direction he is moving towards.
+After animating the pirate, we will then make the pirate rotate towards the direction he is moving towards.
 
-The aim of this section is to implement movements to make the character in the game move - giving it lifelike animations. This is crucial in many AR experiences, augmenting reality by introducing new 3D objects into the scene and making them feel lifelike.
+> The objective of this section is to implement movements to make the character in the game move - giving it lifelike animations. This is crucial in many AR experiences, augmenting reality by introducing new 3D objects into the scene and making them feel lifelike.
 
 ### a. Adding Animations
 
-1. We will first add the **idle** animation 
-2. Under the Assets panel, click on **Add Asset** > **Animation Playback Controller** 
-3. Rename the animation playback controller to `pirate_idle` 
-4. In the Inspector (the panel on the right), select **idle** from the Animation Clip dropdown box.
+We will add three types of animation for the pirate.
+
+<details><summary>Show Instructions</summary>
+
+We will first add the **idle** animation.
+
+1. Under the Assets panel, click on **Add Asset** > **Animation Playback Controller**.
+2. Rename the animation playback controller to `pirate_idle`.
+3. In the Inspector (the panel on the right), select **idle** from the Animation Clip dropdown box.
 
 ![](img/animation_playback_controller.png)
 
 Repeat the same steps for the **walk** and **crash** animation, naming the animation playback controllers `pirate_walk` and `pirate_crash` respectively.
 
-Now, let us link the animations together using the Patch Editor. To show the Patch Editor, select **View** on the menu bar, then select **Show/Hide Patch Editor**. The Patch Editor will be shown on the bottom middle of the Spark AR window. On the bottom right of the Patch Editor, click on **Add Patch**. In the pop up, select **Utility** > **Option Picker**, then click on **Add Patch**. Below the Option Picker patch, select the type to be **Animation Data**. 
+Now, let us link the animations together using the Patch Editor. 
 
-To control the pirate’s animation, the Animation Target patch for the pirate object must be added. Select the **pirate** object in the Scene panel, then in the Inspector, **select the arrow (pointing to the right) on the left of Animation**. Then, to link the Option Picker with the Animation Target, **click and hold the output port of the Option Picker**, and **drag across to the input port** of the Animation Target.
+1. To show the Patch Editor, select **View** on the menu bar, then select **Show/Hide Patch Editor**. The Patch Editor will be shown on the bottom middle of the Spark AR window.
+2. On the bottom right of the Patch Editor, click on **Add Patch**. 
+3. In the pop up, select **Utility** > **Option Picker**, then click on **Add Patch**. 
+4. Below the Option Picker patch, select the type to be **Animation Data**. 
 
-To control the options (via `script.js`), a **Variables from Script** patch is used. In the Assets panel under Script, click on **script.js**. In the Inspector, **click the + button to the right of From Script and select Number**. Change the variable name from `scriptToEditorVar` to `pirate_animation`. Remember this variable name as it will be used in the script. Right click on **scripts.js** and click **Create Patch**. Link the **Variables from Script** patch to the first input port of the **Option Picker**.
+To control the pirate’s animation, the Animation Target patch for the pirate object must be added. 
+1. Select the **pirate** object in the Scene panel, then in the Inspector, **select the arrow (pointing to the right) on the left of Animation**. 
+2. To link the Option Picker with the Animation Target, **click and hold the output port of the Option Picker**, and **drag across to the input port** of the Animation Target.
+
+To control the options (via `script.js`), a **Variables from Script** patch is used. 
+1. In the Assets panel under Script, click on **script.js**. 
+2. In the Inspector, **click the + button to the right of From Script and select Number**.
+3. Change the variable name from `scriptToEditorVar` to `pirate_animation`. Remember this variable name as it will be used in the script. 
+4. Right click on **scripts.js** and click **Create Patch**. 
+5. Link the **Variables from Script** patch to the first input port of the **Option Picker**.
 
 In the Assets panel, drag the pirate_idle, pirate_walk and pirate_crash animation playback controllers to the Patch Editor, and **link the corresponding Animation patches** to the second, third and fourth input ports of the Option Picker patch respectively. The option number for each animation corresponds to the input port of the Option Picker patch (and since the default option is 0, the default animation is the idle animation).
 
@@ -357,9 +380,15 @@ function moveAgent(agent, agentPosition) {
 
 Try starting the game and the pirate will be transitioning between animations and moving from tile to tile.
 
+</details>
+
 ### b. Rotating the Pirate
 
-Last but not least, we need to ensure the pirate is facing the right direction! Let us add a new variable player_direction to store the pirate’s direction. The default direction is down, as the pirate is facing the player.
+Last but not least, we need to ensure the pirate is facing the right direction! Let us add a new variable player_direction to store the pirate’s direction. 
+
+<details><summary>Show Instructions</summary>
+
+The default direction would be **down**, as the pirate is facing the player.
 
 ```
 // Gameflow variables
@@ -413,12 +442,14 @@ function degreesToRadians(degrees) {
 }
 ```
 
+</details> 
+
 ### c. Starting the Game
 
 And that's it! Try starting the game and the pirate will both be transitioning between animations and rotating when moving from one tile to another!
 
 ## 6. Scaling It Up
----
+
 Congratulations! You have picked up the necessary skills and concepts to develop your own puzzle filter. However, there is more that can be done to make the game more fun and exciting. If you are looking to take up the challenge, we have two tasks prepared for you.
 
 > Note: At any time that you are stuck on these challenges, you can refer to our Pirate Dash 360 repository.
@@ -443,8 +474,12 @@ If you wish to add multiple themes as well, you can implement a native UI slider
 For a more immersive experience, try adding effects like snow and sandstorm with [particle systems](https://sparkar.facebook.com/ar-studio/learn/tutorials/adding-particle-systems/)!
 
 ## 7. Optional: Publishing the Filter 
----
-1. Once you are ready for the filter to go live, click on **Upload and Export** on the leftmost panel.
+
+Once you are ready, you may publish the filter!
+
+<details><summary>Show Instructions</summary>
+
+1. Click on **Upload and Export** on the leftmost panel.
 
 <p align="center"><img src="img/7_1.png" width="50%"/></p>
 
@@ -468,27 +503,29 @@ For a more immersive experience, try adding effects like snow and sandstorm with
 
 And that’s it! You will receive a notification when your filter is approved. 
 
+</details>
+
 ## 8. What's Next - Developing your own filter
----
+
 The skills that you have picked up through our tutorial can be used to develop your own applications. You may draw inspirations from:
+
 - Rush Hour or Unblock Me 
 - Bejeweled or Candy Crush
 - Otello
 - Go
 - Checkers
+- Or anything creative/new that you might think of, just like **Pirate Dash 360**!
+
+> Note: Make sure to check for any copyright infringements before developing new versions of existing games.
 
 <p align="center"><img src="img/8.png" width="70%"/></p>
 
-Or anything creative/new that you might think of, just like **Pirate Dash 360**!
-> Note: Make sure to check for any copyright infringements before developing new versions of existing games.
-
-## 9. Appendix, References, Credits
----
+## 9. Appendices, References, Credits
 
 ### **9.1. Spark AR Studio Fundamentals**
 - [Using Spark AR Studio](https://sparkar.facebook.com/ar-studio/learn/articles/fundamentals/navigating-the-interface)
 
-### **9.2. Importing and Customising Game Assets**
+### **9.2. Importing and Customizing Game Assets**
 - [Adding Objects and Assets](https://sparkar.facebook.com/ar-studio/learn/articles/fundamentals/adding-objects-and-assets/#how-objects-and-assets-work-together)
 
 - [Working with Textures and Materials](https://sparkar.facebook.com/ar-studio/learn/tutorials/working-with-textures-and-materials/#creating-material)
