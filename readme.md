@@ -37,7 +37,7 @@ Through this tutorial, you will learn how to:
 ### **2.1. Knowledge Prerequisites**
 - Javascript: https://javascript.info, https://www.json.org/json-en.html
 
-Basic JavaScript knowledge is recommended for this tutorial as it is required for scripting of animations and setting up the scene for the game. Within JavaScript, JavaScript Object Notation (JSON) is a data format which can be used to define the structure of the game. In Pirate Dash 360, it is used to define the tiles required for each level.
+Basic JavaScript knowledge is recommended for this tutorial as it is required for scripting of animations and setting up the scene for the game. Within JavaScript, JavaScript Object Notation (JSON) is a data format which can be used to define the structure of the game. In **Pirate Dash 360**, it is used to define the tiles required for each level.
 
 ### **2.2. Software Prerequisites**
 - **Spark AR Studio v98**: https://sparkar.facebook.com/ar-studio/download
@@ -1076,12 +1076,12 @@ And that's it! Try starting the game and the pirate will both be transitioning b
 
 Congratulations! You have picked up the necessary skills and concepts to develop your own puzzle filter. However, there is more that can be done to make the game more fun and exciting. If you are looking to take up the challenge, we have two tasks prepared for you.
 
-> Note: At any time that you are stuck on these challenges, you can refer to our Pirate Dash 360 repository.
+> Note: At any time that you are stuck on these challenges, you can refer to our [**Pirate Dash 360**](https://github.com/yankai364/Pirate-Dash-360) repository.
 
 ### a. Challenge 1: Creating Multiple Levels
 To introduce a 360 degree experience in the game, one could opt to create multiple levels, surrounding the player in question. An illustration can be seen below:
 
-<p align="center"><img src="img/levels.png" width="30%"/></p>
+<p align="center"><img src="img/levels.jpg" width="30%"/></p>
 
 In order to facilitate multiple levels, you can use a JSON file to pre-customize the setups of the different levels.
 
@@ -1147,7 +1147,7 @@ The skills that you have picked up through our tutorial can be used to develop y
 ## 9. Appendices, References, Credits
 
 ### 9.1. Pirate Dash 360
-- [Full Pirate Dash 360 Repository](https://github.com/yankai364/Pirate-Dash-360)
+- [Pirate Dash 360 Repository](https://github.com/yankai364/Pirate-Dash-360)
 
 ### **9.2. Spark AR Studio Fundamentals**
 - [Using Spark AR Studio](https://sparkar.facebook.com/ar-studio/learn/articles/fundamentals/navigating-the-interface)
