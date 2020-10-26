@@ -27,10 +27,10 @@ We will be re-creating a puzzle game that we did for the Facebook AR Hackathon, 
 ### **1.2. Key Concepts Covered**
 
 Through this tutorial, you will learn how to:
-- Utilize various features of Spark AR Studio
 - Import and customize game assets using Spark AR Studio
-- Augment game environment using Spark AR Studio and JavaScript
-- Add animations using Spark AR Studio and JavaScript
+- Utilize key features of Spark AR Studio such as Plane Tracker, Touch Gestures and Patch Editor
+- Use JavaScript and Spark AR API to access and augment the game environment
+- Add exciting custom animation through Patch Editor and Scripting
 
 ## 2. **Before We Start**
 
@@ -41,7 +41,7 @@ Basic JavaScript knowledge is recommended for this tutorial as it is required fo
 
 ### **2.2. Software Prerequisites**
 - **Spark AR Studio v98**: https://sparkar.facebook.com/ar-studio/download
-- **A code editor**, such as Visual Studio Code: https://code.visualstudio.com/download 
+- **Visual Studio Code**, or any other preferred code editor: https://code.visualstudio.com/download 
 
 ### **2.3. Getting Started**
 <p align="center"><img src="img/2c.png" width="40%"/></p>
@@ -54,7 +54,6 @@ To get started, download this repository by selecting **Download ZIP** and save 
 With a good understanding of the pre-starter project, we can now begin!
 
 ## 3. **Importing and Customizing Game Assets**
----
 We will proceed to import and customize the game assets in the Spark AR environment. To simplify this process, please refer to the `/starter/objects` folder for all the relevant game assets that you would require for this section. 
 
 > The objective of this section is to prepare the static assets for subsequent feature implementation i.e creating the augmented environment, implementing game logic and so on. 
@@ -589,9 +588,8 @@ Scene.root.findFirst("level_" + current_level)
     })
 ```
 
-Run the filter and tap on any tile, you should see the tile elevating slightly:
-
-![](img/tile_elevated.png)
+Run the filter and tap on any tile, you should see the tile elevating slightly. Tap on it again and it should lower to its original position:
+<p align="left"><img src="img/selecting_tiles.gif" width="40%"/></p>
 
 </details>
 
@@ -743,6 +741,8 @@ const shiftz = (td, obj, destination) =>
     Animation.animate(td, Animation.samplers.linear(obj.transform.z.pinLastValue(), destination));
 ```
 
+Once done, restart the filter and try to swap the tiles. You should be able to see the tiles changing positions:
+<p align="left"><img src="img/swapping_tiles.gif" width="40%"/></p>
 </details>
 
 ### 4.7. Shifting the Pirate from One Tile to Another
@@ -859,6 +859,8 @@ Scene.root.findFirst("pirate")
 ```
 
 Restart the filter, swap the tiles to the correct positions and tap on the pirate. Did the pirate move from tile to tile, eventually to the treasure (if you got the right path)? What’s missing?
+
+Animation! The pirate does not move as we have yet to set up any animation. In the next section, we will look at how to incorporate exciting animation to make the pirate move, turn and walk.
 
 </details>
 
@@ -1091,7 +1093,7 @@ Congratulations! You have picked up the necessary skills and concepts to develop
 ### a. Challenge 1: Creating Multiple Levels
 To introduce a 360 degree experience in the game, one could opt to create multiple levels, surrounding the player in question. An illustration can be seen below:
 
-<p align="center"><img src="img/levels.jpg" width="30%"/></p>
+<p align="center"><img src="img/360.gif" width="30%" hspace="50"/><img src="img/levels.png" width="30%" hspace="50"/></p>
 
 In order to facilitate multiple levels, you can use a JSON file to pre-customize the setups of the different levels.
 
