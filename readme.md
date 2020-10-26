@@ -46,7 +46,7 @@ Basic JavaScript knowledge is recommended for this tutorial as it is required fo
 ### **2.3. Getting Started**
 <p align="center"><img src="img/2c.png" width="40%"/></p>
 
-To get started, download this repository by selecting **Download ZIP** and save it to a familiar location. Open the **starter** folder.
+To get started, download this repository by selecting **Download ZIP** and save it to a familiar location.
 
 ### **2.4. Directory Structure**
 ```js
@@ -73,13 +73,13 @@ First, we need to import the relevant assets into Spark AR Studio.
 
 1. Open Spark AR Studio.
    
-2. On the left navigation pane, click **Open** and open `/starter/starter.arproj` to open the project.
+2. On the left navigation pane, click **Open** and select `/starter/starter.arproj` to open the project.
    
 3. From here you can view the Scene environment that we will be working with. Proceed to import the pirate object:
    
-4. Click **+Add Asset** on the bottom left of the side navigation drawer, followed by **Import From Computer....** Select file `/starter/objects/pirate/scene.gltf` to import the Pirate asset.
+4. Click **+Add Asset** on the bottom left of the side navigation drawer, followed by **Import From Computer....** Select `/starter/objects/pirate/scene.gltf` to import the Pirate asset.
    
-5. Repeat Step 3 for `/treasure-chest/chest-anim.fbx`, `/tile/blockHalf.fbx` and `/directions/scene.gltf` under `/starter/objects` to import tiles, directions and treasure assets. You should see the following:
+5. Repeat Step 3 for `/treasure-chest/chest-anim.fbx`, `/tile/blockHalf.fbx` and `/directions/scene.gltf` under `/starter/objects` to import tiles, directions and treasure assets respectively. You should see the following:
 
 <p align="center"><img src="img/assets_file_structure.jpg" width="30%"/></p>
 
@@ -233,15 +233,15 @@ Since we are building a platformer game, the coordinates of each tile has to be 
 
 ![](img/empty_grid.png)
 
-In this devised grid system, the **column indexes are the x axis in SparkAR and row indices are z axis in SparkAR**. This is aligned with the SparkAR dimensions where x is the width and z is the depth from the user’s perspective. Each box represents the **space needed for a single tile (unit length)**.
+In this devised grid system, the **column indexes are the x axis in Spark AR and row indices are z axis in Spark AR**. This is aligned with the Spark AR dimensions where x is the width and z is the depth from the user’s perspective. Each box represents the **space needed for a single tile (unit length)**.
 
 > *From our experiments, we have concluded that all game tiles should only be placed in the white/yellow boxes. Any tile placed within [x: 7, z: 7] to [x: 14, z: 14] would be at the user’s blind spot (too near to the user), and would only be visible if the player moves away from his/her original position.*
 
-In the SparkAR environment, we will need a reference point for our grid, so let’s use the top-left corner i.e. [x: 1, y: 1]. The exact coordinates for the reference point based on our experiments is **[x: -0.463, y: -0.8, z: -0.52]**. We have also pre-determined that the **unit length is 0.15**, after including a small padding between tiles.
+In the Spark AR environment, we will need a reference point for our grid, so let’s use the top-left corner i.e. [x: 1, y: 1]. The exact coordinates for the reference point based on our experiments is **[x: -0.463, y: -0.8, z: -0.52]**. We have also pre-determined that the **unit length is 0.15**, after including a small padding between tiles.
 
-With the reference point and unit length, we can render a tile at any of the boxes in the grid simply by using the grid indexes. For example, if I want to place a tile at [x: 10, z: 5] on the grid, I can calculate the exact coordinates in SparkAR by **multiplying the grid index with our unit length**, and then **adding the reference point coordinate**.
+With the reference point and unit length, we can render a tile at any of the boxes in the grid simply by using the grid indexes. For example, if I want to place a tile at [x: 10, z: 5] on the grid, I can calculate the exact coordinates in Spark AR by **multiplying the grid index with our unit length**, and then **adding the reference point coordinate**.
 
-Hence, the exact coordinates in SparkAR for a tile at [x: 10, z: 5] on our grid would be [x: 10 * 0.15 + (-0.463), z: 5 * 0.15 + (-0.52)].
+Hence, the exact coordinates in Spark AR for a tile at [x: 10, z: 5] on our grid would be [x: 10 * 0.15 + (-0.463), z: 5 * 0.15 + (-0.52)].
 
 </details>
 
@@ -352,7 +352,7 @@ Let’s try to understand the above code. Here, we are exporting an array of obj
 - `tile_patterns`: Every other tile besides start and end tile
 - `tile_positions_to_randomize`: Grid indexes to render random tile patterns at
 
-Essentially, the purpose of `levels.js` is to easily declare the structure of a level in our grid system so that we can render the SparkAR objects in `script.js`.
+Essentially, the purpose of `levels.js` is to easily declare the structure of a level in our grid system so that we can render the Spark AR objects in `script.js`.
 
 </details>
 
@@ -395,7 +395,7 @@ let start_tile = level.start_tile;
 let end_tile = level.end_tile;
 ```
 
-To render a tile in place, we first need to retrieve the respective SparkAR tile object. We will write a function to retrieve the SparkAR tile object based on the tile name provided in our `level.js`:
+To render a tile in place, we first need to retrieve the respective Spark AR tile object. We will write a function to retrieve the Spark AR tile object based on the tile name provided in our `level.js`:
 
 ```js
 async function getTileUI(name) {
@@ -404,7 +404,7 @@ async function getTileUI(name) {
 }
 ```
 
-Next, we will need a function to convert our grid system indexes into X and Z coordinates in SparkAR. The formula can be found at previous section [Positioning Tiles using Grid System](#a-positioning-tiles-using-grid-system).
+Next, we will need a function to convert our grid system indexes into X and Z coordinates in Spark AR. The formula can be found at previous section [Positioning Tiles using Grid System](#a-positioning-tiles-using-grid-system).
 
 ```js
 function getCoordinateXFromIndex(index) {
@@ -416,11 +416,11 @@ function getCoordinateZFromIndex(index) {
 }
 ```
 
-Now that we are able to retrieve the respective SparkAR tile object as well as compute its respective X and Z coordinates based on our grid system, we can write our function for placing tiles. This function takes in the `tile_pattern` JavaScript object as well as its grid `position`, retrieves its respective SparkAR object name, and places it in the specified location.
+Now that we are able to retrieve the respective Spark AR tile object as well as compute its respective X and Z coordinates based on our grid system, we can write our function for placing tiles. This function takes in the `tile_pattern` JavaScript object as well as its grid `position`, retrieves its respective Spark AR object name, and places it in the specified location.
 
 ```js
 async function placeTile(tile_pattern, position) {
-    // Place tile in SparkAR
+    // Place tile in Spark AR
     const tile_UI = await getTileUI(tile_pattern.name);
     tile_UI.transform.x = getCoordinateXFromIndex(position[0]);
     tile_UI.transform.y = top_left_y;
@@ -436,7 +436,7 @@ placeTile(start_tile, start_tile.position);
 placeTile(end_tile, end_tile.position);
 ```
 
-Go back to your SparkAR Studio, and click on **Restart** to reload the filter. You should see the following:
+Go back to your Spark AR Studio, and click on **Restart** to reload the filter. You should see the following:
 
 ![](img/rendering_start_end_tile.png)
 
@@ -462,7 +462,7 @@ tile_patterns.forEach(tile_pattern => {
 })
 ```
 
-Click on **Restart** in SparkAR Studio and you should see the entire level being rendered this time. Restart the filter a few more times, and you should notice that the tiles are being placed randomly.
+Click on **Restart** in Spark AR Studio and you should see the entire level being rendered this time. Restart the filter a few more times, and you should notice that the tiles are being placed randomly.
 
 ![](img/render_random_tiles.png)
 
@@ -477,7 +477,7 @@ function getMidPointFromIndex(position) {
 }
 ```
 
-Now, we simply identify the pirate object in the SparkAR environment and position it accordingly.
+Now, we simply identify the pirate object in the Spark AR environment and position it accordingly.
 
 ```js
 // Place character on start tile
@@ -558,7 +558,7 @@ function animateTileSelect(tile, animation) {
 }
 ```
 
-To trigger the animation, we will need a **subscriber** to an `onTap` event for each tile. We will need to access the SparkAR object for this, so let’s modify the previous code we have written. When we iterate over the tiles for rendering, we will retrieve the respective SparkAR tile object and add a **tap event subscriber**. When a tile is selected, it elevates its position and changes from “blur” to “active” state. Conversely, when a selected tile is selected again, it changes from “active” back to “blur” state and returns to its original position.
+To trigger the animation, we will need a **subscriber** to an `onTap` event for each tile. We will need to access the Spark AR object for this, so let’s modify the previous code we have written. When we iterate over the tiles for rendering, we will retrieve the respective Spark AR tile object and add a **tap event subscriber**. When a tile is selected, it elevates its position and changes from “blur” to “active” state. Conversely, when a selected tile is selected again, it changes from “active” back to “blur” state and returns to its original position.
 
 ```js
 // Place each tile in a random position
@@ -626,7 +626,7 @@ async function placeTile(tile_pattern, position) {
     position_tiles[position] = tile_pattern;
     tiles_position[tile_pattern.name] = position;
  
-    // Place tile in SparkAR
+    // Place tile in Spark AR
     const tile_UI = await getTileUI(tile_pattern.name);
     tile_UI.transform.x = getCoordinateXFromIndex(position[0]);
     tile_UI.transform.y = top_left_y;
@@ -1128,13 +1128,13 @@ Once you are ready, you may publish the filter!
 
 <details><summary>Show Instructions</summary>
 
-1. Click on **Upload and Export** on the leftmost panel.
+1. On Spark AR Studio, click on **Upload and Export** on the leftmost panel.
 
 <p align="center"><img src="img/7_1.png" width="50%"/></p>
 
 2. The file size will be calculated and if it meets the requirement for Facebook (2 MB) and Instagram (4 MB), a green tick stating that it is Ready to Submit will appear. Click on **Export** to export the filter. Save the file on your local PC.
 
-3. Once the file is saved, prepare a demo video (maximum 32 MB) that will help a user understand how the filter can be used. The video can be recorded when you start the preview on Spark AR Studio. Some tips on how to prepare the demo video can be found [here](https://sparkar.facebook.com/ar-studio/learn/publishing/demo-videos-for-instagram-effects/#demo-video-recommendations).
+3. Once the file is saved, prepare a demo video (maximum 32 MB) that will help users to understand how the filter can be used. The video can be recorded when you start the preview on Spark AR Studio. Some tips on how to prepare the demo video can be found [here](https://sparkar.facebook.com/ar-studio/learn/publishing/demo-videos-for-instagram-effects/#demo-video-recommendations).
 
 4. Also, prepare a mini icon that represents the filter (minimum 200 x 200 pixels).
 
@@ -1185,7 +1185,7 @@ The skills that you have picked up through our tutorial can be used to develop y
 ### **9.4. Creating the Augmented Environment**
 - [Scripting Basics](https://sparkar.facebook.com/ar-studio/learn/scripting/scripting-basics#creating-a-script)
 
-- [SparkAR API/Modules Documentation](https://sparkar.facebook.com/ar-studio/learn/reference/scripting/summary)
+- [Spark AR API/Modules Documentation](https://sparkar.facebook.com/ar-studio/learn/reference/scripting/summary)
 
 ### **9.5. Animating the Pirate**
 
