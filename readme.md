@@ -53,7 +53,7 @@ To get started, download this repository by selecting **Download ZIP** and save 
 
 With a good understanding of the pre-starter project, we can now begin!
 
-## 3. **Part 1: Importing and Customizing Game Assets**
+## 3. **Importing and Customizing Game Assets**
 ---
 We will proceed to import and customize the game assets in the Spark AR environment. To simplify this process, please refer to the `/starter/objects` folder for all the relevant game assets that you would require for this section. 
 
@@ -119,7 +119,7 @@ Finally, we are done with placing and resizing our assets. To opt for your very 
 
 </details>
 
-### **3.4. Creating Different Directions for Cheverons (Up, Left, Right)**
+### **3.4. Creating Chevrons for Different Directions (Up, Left, Right)**
 
 As our current **Chevron** is only oriented in one direction, we need to create three different chevrons with different orientations. We can do this by adjusting its rotation.
 
@@ -207,13 +207,17 @@ You should be able to see the following:
 
 </details>
 
-## 4. Part 2: Creating the Augmented Environment
+### **3.6. Checkpoint (1/3)**
+For a working example up to this point, refer to the solution_part_1 folder. If you are facing any issues, ensure that you resolve them by checking your project with our solution before moving on.
+
+
+## 4. Creating the Augmented Environment
 
 Now that we have added the objects to our AR environment, it is time to position them to create our first game level! 
 
 > The objective of this section is to learn how to create the augmented environment by rendering objects, adding user interactions and manipulating objects using scripts.
 
-### a. Positioning Tiles using Grid System
+### 4.1. Positioning Tiles using Grid System
 
 We will now position our tiles using a self-devised Grid System.
 
@@ -235,7 +239,7 @@ Hence, the exact coordinates in SparkAR for a tile at [x: 10, z: 5] on our grid 
 
 </details>
 
-### b. Level Design
+### 4.2. Level Design
 
 After understanding the Grid System, we can start creating our first level! 
 
@@ -255,7 +259,7 @@ That will be all for our first level. Let’s move on to the scripting!
 
 </details>
 
-### c. Mapping Spark AR Objects to JavaScript Objects
+### 4.3. Mapping Spark AR Objects to JavaScript Objects
 
 We will now map objects on both the Studio and code together.
 
@@ -346,7 +350,7 @@ Essentially, the purpose of `levels.js` is to easily declare the structure of a 
 
 </details>
 
-### d. Rendering the Level
+### 4.4. Rendering the Level
 
 With our `levels.js` ready, we can now start writing the main script. 
 
@@ -489,7 +493,7 @@ Great job! You have successfully rendered the level using scripting. In the next
 
 </details>
 
-### e. Selecting Tiles
+### 4.5. Selecting Tiles
 
 When the player selects a tile, there should be some form of indication to show that he/she has selected the tile he/she wanted to choose. In order to do so, we will create a function `animateTileSelect` to elevate the tile slightly when it is being selected, and also return it to its original position when it is being selected again.
 
@@ -591,7 +595,7 @@ Run the filter and tap on any tile, you should see the tile elevating slightly:
 
 </details>
 
-### f. Swapping Tiles
+### 4.6. Swapping Tiles
 
 When two swappable tiles are selected, tiles swapping will occur. Before we can do so, we will need to keep track of the position of each tile. 
 
@@ -741,7 +745,7 @@ const shiftz = (td, obj, destination) =>
 
 </details>
 
-### g. Shifting the Pirate from One Tile to Another
+### 4.7. Shifting the Pirate from One Tile to Another
 
 After swapping tiles, the player is confident that the route to the treasure is created. But before starting the game, we have to work on the game mechanics after the game starts. 
 
@@ -807,7 +811,7 @@ function moveAgent(agent, agentPosition) {
 
 </details>
 
-### h. Starting the Game
+### 4.8. Starting the Game
 
 Great job following through the various gameplay elements, now you are ready to start the game!
  
@@ -858,7 +862,10 @@ Restart the filter, swap the tiles to the correct positions and tap on the pirat
 
 </details>
 
-## 5. Part 3: Giving Life to the Pirate
+### 4.9. Checkpoint (2/3)
+For a working example up to this point, refer to the solution_part_2 folder. If you are facing any issues, ensure that you resolve them by checking your project with our solution before moving on.
+
+## 5. Giving Life to the Pirate
 
 Let’s bring the pirate to life! To do so, an animation playback controller is needed for each animation. The patch editor will link the animations to the options on the option picker s as to control the pirate’s animation from the script. 
 
@@ -866,7 +873,7 @@ After animating the pirate, we will then make the pirate rotate towards the dire
 
 > The objective of this section is to implement movements to make the character in the game move - giving it lifelike animations. This is crucial in many AR experiences, augmenting reality by introducing new 3D objects into the scene and making them feel lifelike.
 
-### a. Adding Animations
+### 5.1. Adding Animations
 
 We will add three types of animation for the pirate.
 
@@ -1006,7 +1013,7 @@ Try starting the game and the pirate will be transitioning between animations an
 
 </details>
 
-### b. Rotating the Pirate
+### 5.2. Rotating the Pirate
 
 Last but not least, we need to ensure the pirate is facing the right direction! Let us add a new variable player_direction to store the pirate’s direction. 
 
@@ -1068,9 +1075,12 @@ function degreesToRadians(degrees) {
 
 </details> 
 
-### c. Starting the Game
+### 5.3. Starting the Game
 
 And that's it! Try starting the game and the pirate will both be transitioning between animations and rotating when moving from one tile to another!
+
+### 5.4. Checkpoint (3/3)
+For a working example up to this point, refer to the solution_part_3 folder. If you are facing any issues, ensure that you resolve them by checking your project with our solution before moving on.
 
 ## 6. Scaling It Up
 
