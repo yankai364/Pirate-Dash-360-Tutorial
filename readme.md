@@ -792,8 +792,11 @@ We will also need a gameflow variable to track if the game has started i.e. the 
 let tile_is_animating = false
 ...
 let ready = false;
+```
 
-Finally, we can add the tap event subscriber to call the moveAgent function:
+Finally, we can add the **tap event subscriber** to call the `moveAgent` function:
+
+```js
 // Place character on start tile
 Scene.root.findFirst("pirate")
     .then(agent => {
@@ -816,7 +819,6 @@ Scene.root.findFirst("pirate")
 ```
 
 Restart the filter, swap the tiles to the correct positions and tap on the pirate. Did the pirate from from tile to tile, eventually to the treasure (if you got the right path)? What’s missing?
->>>>>>> a521b0ead02d18d7c01d5ca72a8aa7c743c270bb
 
 ## 5. Part 3: Giving Life to the Pirate
 
