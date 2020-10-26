@@ -217,22 +217,606 @@ You should be able to see the following:
 
 ## 4. Part 2: Creating the Augmented Environment
 
+Now that we have added the objects to our AR environment, it is time to position them to create our first game level! In this section, the objective is to learn how to create the augmented environment by rendering objects, adding user interactions and manipulating objects using scripts.
+
 ### a. Positioning Tiles using Grid System
+
+Since we are building a platformer game, the coordinates of each tile has to be exact as we do not want to have any visible gaps, misaligned tiles or poor level visibility. To achieve precision, we will use a **Grid System** to define where the tiles should be placed in the AR environment. Since our game provides a 360-degrees experience, we have experimented and devised the below grid (top-down view) for optimal level visibility and multi-level scalability.
+
+![](img/empty_grid.png)
+
+In this devised grid system, the **column indexes are the x axis in SparkAR and row indices are z axis in SparkAR**. This is aligned with the SparkAR dimensions where x is the width and z is the depth from the user’s perspective. Each box represents the **space needed for a single tile (unit length)**.
+
+> *From our experiments, we have concluded that all game tiles should only be placed in the white/yellow boxes. Any tile placed within [x: 7, z: 7] to [x: 14, z: 14] would be at the user’s blind spot (too near to the user), and would only be visible if the player moves away from his/her original position.*
+
+In the SparkAR environment, we will need a reference point for our grid, so let’s use the top-left corner i.e. [x: 1, y: 1]. The exact coordinates for the reference point based on our experiments is **[x: -0.463, y: -0.8, z: -0.52]**. We have also pre-determined that the **unit length is 0.15**, after including a small padding between tiles.
+
+With the reference point and unit length, we can render a tile at any of the boxes in the grid simply by using the grid indexes. For example, if I want to place a tile at [x: 10, z: 5] on the grid, I can calculate the exact coordinates in SparkAR by **multiplying the grid index with our unit length**, and then **adding the reference point coordinate**.
+
+Hence, the exact coordinates in SparkAR for a tile at [x: 10, z: 5] on our grid would be [x: 10 * 0.15 + (-0.463), z: 5 * 0.15 + (-0.52)].
 
 ### b. Level Design
 
-### c. Mapping Spark AR objects to JavaScript objects
+After understanding the Grid System, we can start creating our first level! Here’s a sneak peek on the level design:
+
+![](img/L1_top_view.png)
+
+The pirate begins from the lower left tile and ends at the upper right tile. The positions of the 9 tiles in the middle will be randomized before every attempt. Let’s draft this level design in our grid:
+
+![](img/level_1_grid.png)
+
+Usually, we start our level design with the solution in mind, before deciding which tiles should be shuffled. For our first level, we will shuffle the 9 tiles between [x: 10, z: 4] to [x: 12, z: 6]. The only fixed tiles are the starting tile at [x: 9, z: 6] and the destination tile at [x: 13, z: 4].
+
+That will be all for our first level. Let’s move on to the scripting!
+
+### c. Mapping Spark AR Objects to JavaScript Objects
+
+In your Spark AR Studio, click on **Add Asset** > **Script**. You should see a new `script.js` under your assets. Navigate to your project directory and you should see a **scripts** folder with `script.js` within. This file will be the main script containing all of our game logic. Within the **scripts** folder, create a file named `levels.js`. This file will contain our level data, which will be imported by the main script later on. Open `levels.js` using your favourite editor and insert the following lines:
+
+```js
+module.exports = [
+    {
+        no_of_tiles: 9,
+        start_tile: {
+            name: "tileStart",
+            direction: "right",
+            units : 1,
+            position: [2,8]
+        },
+        end_tile:{
+            name: "tileEnd",
+            position: [6,6]
+        },
+        tile_patterns: [
+            {
+                name: "tile1",
+                direction: "right",
+                units: 1
+            },
+            {
+                name: "tile2",
+                direction: "right",
+                units: 1
+            },
+            {
+                name: "tile3",
+                direction: "up",
+                units: 1
+            },
+            {
+                name: "tile4",
+                direction: "up",
+                units: 1
+            },
+            {
+                name: "tile5",
+                direction: "left",
+                units: 1
+            },
+            {
+                name: "tile6",
+                direction: "left",
+                units: 1
+            },
+            {
+                name: "tile7",
+                direction: "right",
+                units: 1
+            },
+            {
+                name: "tile8",
+                direction: "right",
+                units: 1
+            },
+            {
+                name: "tile9",
+                direction: "right",
+                units: 1
+            },
+        ],
+        tile_positions_to_randomize: [
+            [3,8], [4,8], [5,8], [3,7], [4,7], [5,7], [3,6], [4,6], [5,6]
+        ],
+    }
+]
+```
+
+Let’s try to understand the above code. Here, we are exporting an array of objects, each object representing a game level. There is only 1 object in the array for now since we are working on our first level. Within the level object, there are a few properties:
+- `no_of_tiles`: Total number of tiles
+- `start_tile`: Where the pirate starts from
+- `name`: Spark AR object name
+- `direction`: Where the arrow on the tile is pointing towards
+- `units`: How many tiles to move the pirate when stepped on
+- `position`: Tile position on the grid system
+- `end_tile`: Where the treasure chest is 
+- `tile_patterns`: Every other tile besides start and end tile
+- `tile_positions_to_randomize`: Grid indexes to render random tile patterns at
+
+Essentially, the purpose of `levels.js` is to easily declare the structure of a level in our grid system so that we can render the SparkAR objects in script.js.
 
 ### d. Rendering the Level
 
+With our levels.js ready, we can now start writing the main script. Navigate to the **scripts** folder in your project directory and open `script.js` with your favourite editor. Remove the existing code and insert the following:
+
+```js
+const Scene = require('Scene');
+export const Diagnostics = require('Diagnostics');
+```
+
+Here, we are loading the Scene and Diagnostics module. The Scene module allows us to access the objects placed in our AR environment, while the Diagnostics module is for debugging purposes.
+
+Next, let’s define constants for our tile dimensions based on the grid system:
+
+```js
+// Tile dimensions
+const unit_length = 0.15; // x length and z length
+const top_left_x = -0.463;
+const top_left_y = -0.8;
+const top_left_z = -0.52;
+```
+
+Then, we’ll import `level.js` and retrieve the data for level 1:
+
+```js
+// Level variables
+const levels = require("./levels");
+let current_level = 1;
+let level = levels[current_level - 1]; // lv 1 is index 0
+let no_of_tiles = level.no_of_tiles;
+let tile_positions = level.tile_positions_to_randomize;
+let tile_patterns = level.tile_patterns;
+let start_tile = level.start_tile;
+let end_tile = level.end_tile;
+```
+
+To render a tile in place, we first need to retrieve the respective SparkAR tile object. We will write a function to retrieve the SparkAR tile object based on the tile name provided in our `level.js`:
+
+```js
+async function getTileUI(name) {
+    const level = await Scene.root.findFirst("level" + current_level)
+    return level.findFirst(name)
+}
+```
+
+Next, we will need a function to convert our grid system indexes into X and Z coordinates in SparkAR. The formula can be found at previous section [Positioning Tiles using Grid System](#a-positioning-tiles-using-grid-system).
+
+```js
+function getCoordinateXFromIndex(index) {
+    return top_left_x + (index * unit_length)
+}
+ 
+function getCoordinateZFromIndex(index) {
+    return top_left_z + (index * unit_length)
+}
+```
+
+Now that we are able to retrieve the respective SparkAR tile object as well as compute its respective X and Z coordinates based on our grid system, we can write our function for placing tiles. This function takes in the `tile_pattern` JavaScript object as well as its grid `position`, retrieves its respective SparkAR object name, and places it in the specified location.
+
+```js
+async function placeTile(tile_pattern, position) {
+    // Place tile in SparkAR
+    const tile_UI = await getTileUI(tile_pattern.name)
+    tile_UI.transform.x = getCoordinateXFromIndex(position[0]);
+    tile_UI.transform.y = top_left_y;
+    tile_UI.transform.z = getCoordinateZFromIndex(position[1]);
+}
+```
+
+Let’s test the function! Place the start and end tiles by passing in `start_tile` and `end_tile` and their `position`s:
+
+```js
+// Place start and end tile
+placeTile(start_tile, start_tile.position);
+placeTile(end_tile, end_tile.position);
+```
+
+Go back to your SparkAR Studio, and click on **Restart** to reload the filter. You should see the following:
+
+![](img/rendering_start_end_tile.png)
+
+Hurray! We have successfully rendered the start and end tiles correctly. Next, we need to **render the middle nine tiles in a random fashion**. Let’s write a function that returns us a random array index given a maximum integer value. We will need this function to randomly select tiles to be placed.
+
+```js
+function getRandomInt(max) {
+    return Math.floor(Math.random() * Math.floor(max));
+}
+```
+
+To randomly render tiles, we will first loop through our `tile_patterns` variable, which contains all the tile patterns for the current level. For each tile pattern, we will use our random function to pick a random position on the grid to place the tile.
+
+```js
+// Place each tile in a random position
+// Loop through tiles
+tile_patterns.forEach(tile_pattern => {
+    let randIndex = getRandomInt(tile_positions.length)
+    let position = tile_positions[randIndex]
+    tile_positions.splice(randIndex, 1)
+ 
+    placeTile(tile_pattern, position)
+})
+```
+
+Click on **Restart** in SparkAR Studio and you should see the entire level being rendered this time. Restart the filter a few more times, and you should notice that the tiles are being placed randomly.
+
+![](img/render_random_tiles.png)
+
+Next, we will need to place the pirate at the starting tile. Note that the pirate needs to stand at the center of the tile, so we will need a function that helps to calculate the coordinates of the center of a tile given a grid index. Since we previously wrote two functions to get the X and Z coordinates of a given index, we can simply reuse them.
+
+```js
+function getMidPointFromIndex(position) {
+    return [
+        getCoordinateXFromIndex(position[0]) - (unit_length / 2),
+        getCoordinateZFromIndex(position[1]) + (unit_length / 2)
+    ]
+}
+```
+
+Now, we simply identify the pirate object in the SparkAR environment and position it accordingly.
+
+```js
+// Place character on start tile
+Scene.root.findFirst("pirate")
+    .then(agent => {
+        let agentPosition = start_tile.position
+        let point = getMidPointFromIndex(agentPosition);
+        agent.transform.x = point[0];
+        agent.transform.y = top_left_y + 0.11; // To ensure the pirate is at the right height
+        agent.transform.z = point[1];
+    })
+```
+
+Click on **Restart** in Spark AR Studio and you should see the pirate being placed in the center of the starting tile:
+
+![](img/render_pirate.png)
+
+Great job! You have successfully rendered the level using scripting. In the next sections, we will work on handling user interactions, such as tapping on a single tile to select it, tapping on two tiles to swap them, and tapping on the pirate to start walking.
+
 ### e. Selecting Tiles
+
+When the player selects a tile, there should be some form of indication to show that he/she has selected the tile he/she wanted to choose. In order to do so, we will create a function `animateTileSelect` to elevate the tile slightly when it is being selected, and also return it to its original position when it is being selected again.
+
+First, let’s add the `Animation` and `TouchGestures` library to our imports:
+
+```js
+// Imports
+const Scene = require('Scene');
+export const Diagnostics = require('Diagnostics');
+const Animation = require('Animation')
+const TouchGestures = require("TouchGestures");
+```
+
+Since all animations require a `TimeDriver`, we’ll create a function that returns a default `TimeDriver` with **duration 200** and **loop count 1**:
+
+```js
+// Animations
+function getTimeDriver(duration = 200, loopCount = 1, mirror = false) {
+    return Animation.timeDriver({
+        durationMilliseconds: duration,
+        loopCount: loopCount,
+        mirror: mirror
+    });
+}
+```
+
+Next, we’ll also use a boolean variable to keep track if a tile is animating. We will need this to ensure when a tile is animating, no other tiles can have any interaction with the user. This is to prevent issues when a user presses multiple tiles quickly. In addition, we will need a variable to store the selected tile.
+
+```js
+// Gameflow variables
+let tile_is_animating = false
+let selection = null; // store any selected tile (for swapping)
+```
+
+Let’s now complete the animation function for tile selection. The animation will be a simple linear elevation and lowering when the tile is being selected and selected for the second time respectively.
+
+```js
+function animateTileSelect(tile, animation) {
+    const tdTileMove = getTimeDriver();
+ 
+    let y_value = tile.transform.y.pinLastValue();
+    y_value = animation === "active" ? y_value + 0.02 : y_value - 0.02;
+ 
+    tile.transform.y = Animation.animate(
+        tdTileMove,
+        Animation.samplers.linear(tile.transform.y.pinLastValue(), y_value)
+    );
+ 
+    tile_is_animating = true
+    tdTileMove.start();
+    tdTileMove.onCompleted().subscribe(function() {
+        tile_is_animating = false
+    })
+}
+```
+
+To trigger the animation, we will need a **subscriber** to an `onTap` event for each tile. We will need to access the SparkAR object for this, so let’s modify the previous code we have written. When we iterate over the tiles for rendering, we will retrieve the respective SparkAR tile object and add a **tap event subscriber**. When a tile is selected, it elevates its position and changes from “blur” to “active” state. Conversely, when a selected tile is selected again, it changes from “active” back to “blur” state and returns to its original position.
+
+```js
+// Place each tile in a random position
+// Loop through tiles
+Scene.root.findFirst("level_" + current_level)
+    .then(level => {
+        tile_patterns.forEach(tile_pattern => {
+            let randIndex = getRandomInt(tile_positions.length)
+            let position = tile_positions[randIndex]
+            tile_positions.splice(randIndex, 1)
+ 
+            placeTile(tile_pattern, position)
+ 
+            level.findFirst(tile_pattern.name)
+                .then(tile_UI => {
+                    // For each tile, prepare listener for tap event
+                    TouchGestures.onTap(tile_UI).subscribe(function () {
+                        if (!tile_is_animating) {
+                            if (selection === null) {
+                                // if there is no active tile
+                                selection = tile_UI
+                                animateTileSelect(tile_UI, "active")
+                            } else {
+                                // if active tile is same as selection, de-select tile
+                                if (tile_UI === selection) {
+                                    animateTileSelect(tile_UI, "blur")
+                                    selection = null
+                                }
+                            }
+                        }
+                    });
+                })
+        })
+    })
+```
+
+Run the filter and tap on any tile, you should see the tile elevating slightly:
+
+![](img/tile_elevated.png)
 
 ### f. Swapping Tiles
 
+When two swappable tiles are selected, tiles swapping will occur. Before we can do so, we will need to keep track of the position of each tile. We will create 2 variables as part of our level variables to store the mapping of each tile to its grid position, as well as a reversed mapping of each grid position to its respective tile.
+
+```js
+// Level variables
+const levels = require("./levels");
+let current_level = 1;
+...
+let position_tiles = {}
+let tiles_position = {}
+```
+
+Next, we will modify our placeTiles function to update the 2 variables:
+
+```js
+async function placeTile(tile_pattern, position) {
+ 
+    // Place tile in position_tiles and tiles_position
+    position_tiles[position] = tile_pattern
+    tiles_position[tile_pattern.name] = position
+ 
+    // Place tile in SparkAR
+    const tile_UI = await getTileUI(tile_pattern.name)
+    tile_UI.transform.x = getCoordinateXFromIndex(position[0]);
+    tile_UI.transform.y = top_left_y;
+    tile_UI.transform.z = getCoordinateZFromIndex(position[1]);
+}
+```
+
+We will also need a gameflow variable to keep track of the position of the selected tile:
+
+```js
+// Gameflow variables
+let tile_is_animating = false
+let selection = null; // store any selected tile (for swapping)
+let selection_position = null
+```
+
+Similarly, let’s modify our subscriber for tile selection to update the selection_position variable:
+
+```js
+// For each tile, prepare listener for tap event
+TouchGestures.onTap(tile_UI).subscribe(function () {
+    if (!tile_is_animating) {
+        if (selection === null) {
+            // if there is no active tile
+            selection = tile_UI
+            selection_position = tiles_position[tile_pattern.name]
+            animateTileSelect(tile_UI, "active")
+        } else {
+            // if active tile is same as selection, de-select tile
+            if (tile_UI === selection) {
+                animateTileSelect(tile_UI, "blur")
+                selection = null
+                selection_position = null
+            }
+            // swap tiles
+            else {
+                swapTiles(selection_position, tiles_position[tile_pattern.name], selection, tile_UI)
+                animateTileSelect(selection, "blur")
+                selection = null
+                selection_position = null
+            }
+        }
+    }
+});
+```
+
+Previously, we had set up a listener in the previous section to listen for a tap event with `TouchGestures.onTap`, and a function that will be called in the subscribe method. Let us now modify by **adding an else block** after the if block that deselects a tile. The tiles should be deselected and “locked in” to the environment after the tile swap.
+
+```js
+// For each tile, prepare listener for tap event
+TouchGestures.onTap(tile_UI).subscribe(function () {
+    if (!ready) {       
+        if (!tile_is_animating) {
+            ...
+            } else {
+                // if active tile is same as selection, de-select tile
+                if (tile_UI === selection) {
+                    ...
+                }
+                // swap tiles
+                else {
+                    swapTiles(selection_position, tiles_position[tile_pattern.name], selection, tile_UI)
+                    animateTileSelect(selection, "blur")
+                    selection = null
+                    selection_position = null
+                }
+            }
+        }
+    }
+});
+```
+
+Let us dive deeper into the `swapTiles` function. First, we will need to **identify the tile representations** in the selected position and **swap them in the position to tile mappings**. After changing the underlying representations, the game environment will change, where the tiles shown in the screen get a **swap animation** with `animateTileSwap`.
+
+```js
+async function placeTile(tile_pattern, position) {
+    ...
+}
+ 
+async function swapTiles(position_1, position_2, selection, tile_UI) {
+    let tile_pattern_1 = position_tiles[position_1]
+    let tile_pattern_2 = position_tiles[position_2]
+    
+    // Swap tiles
+    position_tiles[position_1] = tile_pattern_2
+    tiles_position[tile_pattern_2.name] = position_1
+    position_tiles[position_2] = tile_pattern_1
+    tiles_position[tile_pattern_1.name] = position_2
+ 
+    animateTileSwap(selection, tile_UI)
+}
+```
+
+```js
+function animateTileSwap(tile1, tile2) {
+    const tdTileSwap = getTimeDriver();
+ 
+    let tile1x = tile1.transform.x.lastValue;
+    let tile1z = tile1.transform.z.lastValue;
+    tile1.transform.x = shiftx(tdTileSwap, tile1, tile2.transform.x.lastValue);
+    tile1.transform.z = shiftz(tdTileSwap, tile1, tile2.transform.z.lastValue);
+    tile2.transform.x = shiftx(tdTileSwap, tile2, tile1x);
+    tile2.transform.z = shiftz(tdTileSwap, tile2, tile1z);
+    tile_is_animating = true
+    tdTileSwap.start();
+    tdTileSwap.onCompleted().subscribe(function() {
+        tile_is_animating = false
+    })
+}
+```
+
+The `shiftx` and `shiftz` functions are separated for reusability.
+
+```js
+const shiftx = (td, obj, destination) =>
+    Animation.animate(td, Animation.samplers.linear(obj.transform.x.pinLastValue(), destination));
+ 
+const shiftz = (td, obj, destination) =>
+    Animation.animate(td, Animation.samplers.linear(obj.transform.z.pinLastValue(), destination));
+```
+
 ### g. Shifting the Pirate from One Tile to Another
+
+After swapping tiles, the player is confident that the route to the treasure is created. But before starting the game, we have to work on the game mechanics after the game starts. 
+
+Firstly, the pirate is not allowed to revisit the same tile twice, as it will result in an endless loop. To prevent this, we will use a variable to track the tiles that have been visited:
+
+```js
+// Level variables
+const levels = require("./levels");
+...
+let position_tiles = {}
+let tiles_position = {}
+let position_visited = {}
+```
+
+We will also need variables to track if a player has won or lost at any time during the game:
+
+```js
+// Gameflow variables
+let tile_is_animating = false
+...
+let player_win = false;
+let player_lost = false;
+```
+
+Next, let’s create the `moveAgent` function, which will determine and move the pirate to the next tile based on the current tile he is stepping on. This function will be called at every step. The player wins whenever the pirate steps on the end tile, and loses whenever the pirate steps off the grid or revisits a tile. 
+
+```js
+function moveAgent(agent, agentPosition) {
+    let direction = position_tiles[agentPosition].direction;
+    position_visited[agentPosition] = true;
+    
+    let destinationPosition = null;
+    if (direction == "left") {
+        destinationPosition = [agentPosition[0] - 1, agentPosition[1]];
+    } else if (direction == "right") {
+        destinationPosition = [agentPosition[0] + 1, agentPosition[1]];
+    } else if (direction == "up") {
+        destinationPosition = [agentPosition[0], agentPosition[1] - 1];
+    } else if (direction == "down") {
+        destinationPosition = [agentPosition[0], agentPosition[1] + 1];
+    }
+ 
+    if (destinationPosition == null || position_tiles[destinationPosition] == null) {
+        Diagnostics.log("Invalid move");
+        player_lost = true;
+        return agentPosition;
+    } else if (position_visited[destinationPosition]) {
+        Diagnostics.log("Moved backwards");
+        player_lost = true;
+        return agentPosition;
+    }
+ 
+    // Check for win state
+    if (destinationPosition[0] === end_tile.position[0] && destinationPosition[1] === end_tile.position[1]) {
+        Diagnostics.log("Reached chest!");
+    }
+ 
+    return destinationPosition;
+}
+```
 
 ### h. Starting the Game
 
+Great job following through the various gameplay elements, now you are ready to start the game! We have made the trigger to start the game really intuitive - the player only has to tap on the pirate. To do so, we implement a `TouchGestures.onTap` listener on the pirate object, and the function inside the subscribe method will be called when the pirate is tapped. We check if the player has lost, or if the pirate is at the ending position. If the condition evaluates to false, the game starts and the `moveAgent` function is called at every 1 second (1000ms) interval.
+
+Since we are invoking a function in interval, we need to import the `Time` library:
+
+```js
+const Time = require("Time");
+```
+
+We will also need a gameflow variable to track if the game has started i.e. the player has tapped on the pirate:
+
+```js
+// Gameflow variables
+let tile_is_animating = false
+...
+let ready = false;
+
+Finally, we can add the tap event subscriber to call the moveAgent function:
+// Place character on start tile
+Scene.root.findFirst("pirate")
+    .then(agent => {
+        let agentPosition = start_tile.position
+        ...
+ 
+        // Listen for tap on character
+        TouchGestures.onTap(agent).subscribe(function (gesture) {
+            Diagnostics.log("Starting game");
+            ready = true;
+            Time.setInterval(() => {
+                if (!player_lost && (agentPosition[0] !== end_tile.position[0] || agentPosition[1] !== end_tile.position[1])) {
+                    agentPosition = moveAgent(agent, agentPosition);
+                }
+            }, 1000);
+        });
+ 
+        Diagnostics.log("Agent loaded");
+    })
+```
+
+Restart the filter, swap the tiles to the correct positions and tap on the pirate. Did the pirate from from tile to tile, eventually to the treasure (if you got the right path)? What’s missing?
+>>>>>>> a521b0ead02d18d7c01d5ca72a8aa7c743c270bb
 
 ## 5. Part 3: Giving Life to the Pirate
 
@@ -282,13 +866,13 @@ In the Assets panel, drag the pirate_idle, pirate_walk and pirate_crash animatio
 
 Now changing between animations can be scripted in `scripts.js` with `Patches.inputs.setScalar`. Add the `Patches` module as a dependency.
 
-```
+```js
 const Patches = require('Patches');
 ```
 
 Set the animation to **idle** (option 0) when the pirate object is found in the scene.
 
-```
+```js
 // Place character on start tile
 Scene.root.findFirst("pirate")
     .then(agent => {
@@ -305,7 +889,7 @@ Scene.root.findFirst("pirate")
 
 Set the animation to **walk** (option 1) in a new function `animateMoveAgent`, which will be called when the pirate takes a step. After each step, reset the animation to idle.
 
-```
+```js
 function animateMoveAgent(agent, destinationPosition, direction) {
     
     Patches.inputs.setScalar('pirate_animation', 1);
@@ -329,7 +913,7 @@ function animateMoveAgent(agent, destinationPosition, direction) {
 
 Add the call to `animateMoveAgent` in `moveAgent`.
 
-```
+```js
 function moveAgent(agent, agentPosition) {
     ...
     } else if (direction == "down") {
@@ -345,7 +929,7 @@ function moveAgent(agent, agentPosition) {
 
 Set the animation to **crash** (option 2) when the pirate takes an invalid move, or when it moves backwards (to a visited tile) in `moveAgent`. The `moveAgent` function is called when the pirate starts navigating from one tile to another (after being tapped on by the player).
 
-```
+```js
 function moveAgent(agent, agentPosition) {
     let direction = position_tiles[agentPosition].direction;
     ...
@@ -390,14 +974,14 @@ Last but not least, we need to ensure the pirate is facing the right direction! 
 
 The default direction would be **down**, as the pirate is facing the player.
 
-```
+```js
 // Gameflow variables
 let player_direction = "down"
 ```
 
 Then, add an if block in `animateMoveAgent` to check if the direction is the same as the player’s direction. If it isn't, rotate the agent with a new function `animateRotateAgent`.
 
-```
+```js
 function animateMoveAgent(agent, destinationPosition, direction) {
     Patches.inputs.setScalar('pirate_animation', 1)
  
@@ -415,7 +999,7 @@ function animateMoveAgent(agent, destinationPosition, direction) {
 
 The `animateRotateAgent` function is created to implement the animation with `Animation.animate`.
 
-```
+```js
 function animateRotateAgent(agent, direction) {
     const tdRotateAgent = getTimeDriver()
     let angles = {
@@ -435,7 +1019,7 @@ function animateRotateAgent(agent, direction) {
 
 The second argument of `Animation.animate` - the linear animation `Animation.samplers.linear` function takes in the radian values of the current and targeted angles. Thus, the following `degreeToRadians` function converts the values.
 
-```
+```js
 function degreesToRadians(degrees) {
     let pi = Math.PI;
     return degrees * (pi / 180);
