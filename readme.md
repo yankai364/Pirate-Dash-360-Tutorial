@@ -18,7 +18,7 @@ It can be daunting to learn a new technology or software, especially for cutting
 
 ### **1.1. What Are We Building**
 
-We will be re-creating a puzzle game that we did for the Facebook AR Hackathon, called [Pirate Dash 360](https://devpost.com/software/pirate-dash-360). It is an immersive 360° AR puzzle platformer game filter that utilises the phone's back-facing camera. Players guide the pirate to the treasure by swapping directional tiles. 
+We will be re-creating a puzzle game that we did for the Facebook AR Hackathon, called [Pirate Dash 360](https://devpost.com/software/pirate-dash-360). It is an immersive 360° AR puzzle platformer game filter that utilizes the phone's back-facing camera. Players guide the pirate to the treasure by swapping directional tiles. 
 
 > Note: We will be creating a simplified, one-level version of Pirate Dash 360.
  
@@ -144,7 +144,7 @@ As our current **Chevron** is only oriented in one direction, we need to create 
 
 ### **3.5. Grouping Objects, Organizing Structure and Final Adjustments**
 
-This section emcompasses the concept of grouping different objects together, as well as organizing them in the correct structure. You may have noticed that certain objects like the Pirate are in fact a group of objects. In this tutorial, we need to group tiles with directions, as well as tiles with treasure.
+This section encompasses the concept of grouping different objects together, as well as organizing them in the correct structure. You may have noticed that certain objects like the Pirate are in fact a group of objects. In this tutorial, we need to group tiles with directions, as well as tiles with treasure.
 
 <details><summary>Show Instructions</summary>
 
@@ -176,7 +176,7 @@ This section emcompasses the concept of grouping different objects together, as 
 You should be able to see the following:
 <p align="center"><img src="img/tiles.jpg" width="100%"/></p>
 
-13. Make duplicates of relevant tiles and rename them accordingly to conclude this section, before moving to augmenting the environment with javascript. Refer to the table below for the finalised details on duplication and renaming of tiles.
+13. Make duplicates of relevant tiles and rename them accordingly to conclude this section, before moving to augmenting the environment with javascript. Refer to the table below for the finalized details on duplication and renaming of tiles.
     
     Tile Name | Chevron Type/Treasure in Tile
     ------------ | -------------
@@ -342,7 +342,7 @@ Let’s try to understand the above code. Here, we are exporting an array of obj
 - `tile_patterns`: Every other tile besides start and end tile
 - `tile_positions_to_randomize`: Grid indexes to render random tile patterns at
 
-Essentially, the purpose of `levels.js` is to easily declare the structure of a level in our grid system so that we can render the SparkAR objects in script.js.
+Essentially, the purpose of `levels.js` is to easily declare the structure of a level in our grid system so that we can render the SparkAR objects in `script.js`.
 
 </details>
 
@@ -910,7 +910,7 @@ Now changing between animations can be scripted in `scripts.js` with `Patches.in
 const Patches = require('Patches');
 ```
 
-Set the animation to **idle** (option 0) when the pirate object is found in the scene.
+Set the animation to **idle** (option 0) where the pirate object is found in the scene.
 
 ```js
 // Place character on start tile
@@ -1081,9 +1081,9 @@ Congratulations! You have picked up the necessary skills and concepts to develop
 ### a. Challenge 1: Creating Multiple Levels
 To introduce a 360 degree experience in the game, one could opt to create multiple levels, surrounding the player in question. An illustration can be seen below:
 
-[TODO: Add in different levels]
+<p align="center"><img src="img/levels.png" width="30%"/></p>
 
-In order to facilitate multiple levels, you could use a JSON file to pre-customise the setups of the different levels.
+In order to facilitate multiple levels, you can use a JSON file to pre-customize the setups of the different levels.
 
 Additionally, you can add instructions and directional signs to navigate the player from one level to another.
 
@@ -1129,7 +1129,7 @@ And that’s it! You will receive a notification when your filter is approved.
 
 </details>
 
-## 8. What's Next - Developing your own filter
+## 8. What's Next
 
 The skills that you have picked up through our tutorial can be used to develop your own applications. You may draw inspirations from:
 
